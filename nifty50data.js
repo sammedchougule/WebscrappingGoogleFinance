@@ -66,9 +66,8 @@ async function scrapeAllNifty50Stocks() {
   for (const stockSymbol of nifty50Stocks) {
     console.log(`Fetching data for ${stockSymbol}...`);
     await scrapeStockData(stockSymbol, page);
-
   }
-  
+
   // Close the browser
   await browser.close();
 
