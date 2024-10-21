@@ -98,7 +98,7 @@
 
 
 
-// // FIRST ROW IS TRANSFORMED INTO AN OBJECT's KEY AND SUBSEQUENT ROWS AS VALUES
+// FIRST ROW IS TRANSFORMED INTO AN OBJECT's KEY AND SUBSEQUENT ROWS AS VALUES
 
 // const puppeteer = require('puppeteer');
 // const fs = require('fs');
@@ -190,10 +190,10 @@ const scrapeData = async () => {
 };
 
 // Run the scraping function every 10 seconds
-// setInterval(scrapeData, 10000);
+ setInterval(scrapeData, 100000);
 
 // Run the scraping function One time
-  scrapeData();
+//  scrapeData();
 
 
 

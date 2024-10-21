@@ -165,7 +165,7 @@ scrapeStockData(stockSymbol);
 // function startScraping() {
 //   scrapeStockData(stockSymbol);
 
-//   // Set an interval to run the function every 30,000ms (1 minute)
+//   //TODO Set an interval to run the function every 30,000ms (1 minute)
 //   setInterval(() => {
 //     console.log(`Fetching data for ${stockSymbol} at ${new Date().toLocaleTimeString()}...`);
 //     scrapeStockData(stockSymbol);
