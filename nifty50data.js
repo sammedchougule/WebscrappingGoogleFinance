@@ -2,16 +2,54 @@ const puppeteer = require('puppeteer');
 
 // List of all Nifty 50 stock symbols
 const nifty50Stocks = [
-  'RELIANCE:NSE', 'TCS:NSE', 'HDFCBANK:NSE', 'INFY:NSE', 'ICICIBANK:NSE', 
-  'HINDUNILVR:NSE', 'ITC:NSE', 'KOTAKBANK:NSE', 'LT:NSE', 'SBIN:NSE', 
-  'BAJFINANCE:NSE', 'AXISBANK:NSE', 'BHARTIARTL:NSE', 'HDFC:NSE', 'ASIANPAINT:NSE', 
-  'MARUTI:NSE', 'DMART:NSE', 'NTPC:NSE', 'TATASTEEL:NSE', 'SUNPHARMA:NSE', 
-  'ULTRACEMCO:NSE', 'WIPRO:NSE', 'POWERGRID:NSE', 'NESTLEIND:NSE', 'JSWSTEEL:NSE',
-  'TITAN:NSE', 'M&M:NSE', 'BAJAJFINSV:NSE', 'HCLTECH:NSE', 'TECHM:NSE', 
-  'INDUSINDBK:NSE', 'ONGC:NSE', 'COALINDIA:NSE', 'DRREDDY:NSE', 'BPCL:NSE', 
-  'GRASIM:NSE', 'SBILIFE:NSE', 'ADANIPORTS:NSE', 'BRITANNIA:NSE', 'DIVISLAB:NSE',
-  'HEROMOTOCO:NSE', 'CIPLA:NSE', 'SHREECEM:NSE', 'APOLLOHOSP:NSE', 'EICHERMOT:NSE',
-  'BAJAJ-AUTO:NSE', 'TATAMOTORS:NSE', 'UPL:NSE', 'HDFCLIFE:NSE', 'VEDL:NSE'
+  'ADANIPORTS:NSE',
+  'APOLLOHOSP:NSE',
+  'ASIANPAINT:NSE',
+  'AXISBANK:NSE',
+  'BAJAJ-AUTO:NSE',
+  'BAJAJFINSV:NSE',
+  'BAJFINANCE:NSE',
+  'BHARTIARTL:NSE',
+  'BPCL:NSE',
+  'CIPLA:NSE',
+  'COALINDIA:NSE',
+  'DIVISLAB:NSE',
+  'DRREDDY:NSE',
+  'EICHERMOT:NSE',
+  'GRASIM:NSE',
+  'HCLTECH:NSE',
+  'HDFCBANK:NSE',
+  'HDFCLIFE:NSE',
+  'HEROMOTOCO:NSE',
+  'HINDUNILVR:NSE',
+  'ICICIBANK:NSE',
+  'INDUSINDBK:NSE',
+  'INFY:NSE',
+  'ITC:NSE',
+  'JSWSTEEL:NSE',
+  'KOTAKBANK:NSE',
+  'LT:NSE',
+  'M&M:NSE',
+  'MARUTI:NSE',
+  'NESTLEIND:NSE',
+  'NTPC:NSE',
+  'ONGC:NSE',
+  'POWERGRID:NSE',
+  'RELIANCE:NSE',
+  'SBILIFE:NSE',
+  'SBIN:NSE',
+  'SHREECEM:NSE',
+  'SUNPHARMA:NSE',
+  'TATACONSUM:NSE',
+  'TATAMOTORS:NSE',
+  'TATASTEEL:NSE',
+  'TECHM:NSE',
+  'TITAN:NSE',
+  'TCS:NSE',
+  'ULTRACEMCO:NSE',
+  'UPL:NSE',
+  'VEDL:NSE',
+  'WIPRO:NSE'
 ];
 
 // Function to scrape data for each stock
@@ -23,26 +61,24 @@ async function scrapeStockData(stockSymbol, page) {
     await page.waitForSelector('.PdOqHc'); // Stock symbol
     await page.waitForSelector('.zzDege'); // Stock name
     await page.waitForSelector('.YMlKec.fxKbKc'); // Stock price
-    await page.waitForSelector('.P2Luy.Ez2Ioe.ZYVHBb'); // Stock price_change
-    await page.waitForSelector('.NydbP.nZQ6l.tnNmPe'); // Stock privious close
+    await page.waitForSelector('.P2Luy.ZYVHBb'); // Stock price_change
+    await page.waitForSelector('.NydbP.tnNmPe'); // Stock percentage_change
 
     // Extract the stock data
     const stockData = await page.evaluate(() => {
       let stockSymbol = document.querySelector('.PdOqHc').innerText; // Stock symbol
       let stockName = document.querySelector('.zzDege').innerText; // Stock name
       let stockPrice = document.querySelector('.YMlKec.fxKbKc').innerText; // Stock price
-      let stockPriceChange = document.querySelector('.P2Luy.Ez2Ioe.ZYVHBb').innerText; // Stock price change
-      let stockPreviousClose = document.querySelector('.P6K39c').innerText; // Stock priious close
-      let stockpercentagechange = document.querySelector('.NydbP.nZQ6l.tnNmPe').innerText; // Stock priious close
+      let stockPriceChange = document.querySelector('.P2Luy.ZYVHBb').innerText; // Stock price_change
+      let stockPercentageChange = document.querySelector('.NydbP.tnNmPe').innerText; // Stock percentage_change
 
 
       return {
-        symbol: stockSymbol,
+        //symbol: stockSymbol,
         name: stockName,
         price: stockPrice,
         priceChange: stockPriceChange,
-        previousClose: stockPreviousClose,
-        percentageChange: stockpercentagechange
+        percentageChange: stockPercentageChange
       };
     });
 
@@ -59,9 +95,6 @@ async function scrapeAllNifty50Stocks() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
-  // Array to store all stock data
-  const allStockData = [];
-
   // Loop through each stock symbol and scrape the data
   for (const stockSymbol of nifty50Stocks) {
     console.log(`Fetching data for ${stockSymbol}...`);
@@ -75,4 +108,18 @@ async function scrapeAllNifty50Stocks() {
 
 
 // Start the scraping process
-scrapeAllNifty50Stocks();
+//scrapeAllNifty50Stocks();
+
+
+// Function tor run the scrapper every 30 seconds
+function startScraping() {
+  scrapeAllNifty50Stocks();
+
+    // Set an interval to run the function every 30,000ms (1 minute)
+  setInterval(() => {
+    console.log(`Fetching data at ${new Date().toLocaleTimeString()}... `)
+    scrapeAllNifty50Stocks();
+  }, 30000);
+}
+
+startScraping();
