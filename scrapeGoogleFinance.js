@@ -103,14 +103,14 @@ async function scrapeStockData(stockSymbol) {
   console.log(`Price: ${stockData.price}`);
   console.log(`Price Change: ${stockData.priceChange}`);
   console.log(`Percentage Change: ${stockData.percentageChange}`);
-  // console.log(`Previous Close: ${stockData.previousClose}`);
-  // console.log(`Days Range: ${stockData.daysRange}`);
-  // console.log(`Year Range: ${stockData.yearRange}`);
-  // console.log(`Market Cap: ${stockData.marketCap}`);
-  // console.log(`Avg Volume: ${stockData.avgVolume}`);
-  // console.log(`P/E Ratio: ${stockData.peRatio}`);
-  // console.log(`Dividend Yield: ${stockData.dividendYield}`);
-  // console.log(`Exchange: ${stockData.primaryExchange}`);
+  console.log(`Previous Close: ${stockData.previousClose}`);
+  console.log(`Days Range: ${stockData.daysRange}`);
+  console.log(`Year Range: ${stockData.yearRange}`);
+  console.log(`Market Cap: ${stockData.marketCap}`);
+  console.log(`Avg Volume: ${stockData.avgVolume}`);
+  console.log(`P/E Ratio: ${stockData.peRatio}`);
+  console.log(`Dividend Yield: ${stockData.dividendYield}`);
+  console.log(`Exchange: ${stockData.primaryExchange}`);
 
 
   // Now scrape news articles related to the stock
@@ -134,48 +134,24 @@ async function scrapeStockData(stockSymbol) {
     });
   });
 
-  // // Assuming 'newsData' contains the list of articles and show ALL THE NEWS ARTICLES
-  // if (newsData && newsData.length > 0) {
-  //   console.log('Related News Articles:');
-  //   newsData.forEach((article, index) => {
-  //     if (article.title && article.link && article.source) {
-  //       console.log(`${index + 1}. ${article.title}`);
-  //       console.log(`   Link: ${article.link}`);
-  //       console.log(`   Source: ${article.source}`);
-  //       console.log(`   Date: ${article.date}`);
-  //       console.log(`   Image: ${article.imageUrl}`);
-  //     }
-  //   });
-  // } else {
-  //   console.log('No related news articles found.');
-  // }
 
 
+  // Assuming 'newsData' contains the list of articles and show ALL THE NEWS ARTICLES
 
-  // Assuming 'newsData' contains the list of articles and shows top 5 newsData
-  // if (newsData && newsData.length > 0) {
-  //   console.log('Related News Articles:');
-  //   let displayedCount = 0;
-  //   newsData.forEach((article, index) => {
-  //     if (displayedCount < 5 && article.title && article.link && article.source) {
-  //       console.log(`${index + 1}. ${article.title}`);
-  //       console.log(`   Link: ${article.link}`);
-  //       console.log(`   Source: ${article.source}`);
-  //       console.log(`   Date: ${article.date}`);
-  //       console.log(`   Image: ${article.imageUrl}`);
-  //       displayedCount++;
-  //     }
-  //   });
-
-  //   if (displayedCount === 0) {
-  //     console.log('No valid news articles found');
-  //   }
-  //   else {
-  //     console.log('No related news articles found.')
-  //   }
-  // }
-
-
+  if (newsData && newsData.length > 0) {
+    console.log('Related News Articles:');
+    newsData.forEach((article, index) => {
+      if (article.title && article.link && article.source) {
+        console.log(`${index + 1}. ${article.title}`);
+        console.log(`   Link: ${article.link}`);
+        console.log(`   Source: ${article.source}`);
+        console.log(`   Date: ${article.date}`);
+        console.log(`   Image: ${article.imageUrl}`);
+      }
+    });
+  } else {
+    console.log('No related news articles found.');
+  }
 
 
   // Close the browser
@@ -183,18 +159,18 @@ async function scrapeStockData(stockSymbol) {
 }
 
 // Run the scraper only once
-//scrapeStockData(stockSymbol);
+scrapeStockData(stockSymbol);
 
 // Function to run the scraper every half minute
-function startScraping() {
-  scrapeStockData(stockSymbol);
+// function startScraping() {
+//   scrapeStockData(stockSymbol);
 
-  // Set an interval to run the function every 30,000ms (1 minute)
-  setInterval(() => {
-    console.log(`Fetching data for ${stockSymbol} at ${new Date().toLocaleTimeString()}...`);
-    scrapeStockData(stockSymbol);
-  }, 30000); // 30,000 milliseconds = half minute
-}
+//   // Set an interval to run the function every 30,000ms (1 minute)
+//   setInterval(() => {
+//     console.log(`Fetching data for ${stockSymbol} at ${new Date().toLocaleTimeString()}...`);
+//     scrapeStockData(stockSymbol);
+//   }, 30000); // 30,000 milliseconds = half minute
+// }
 
 // Start scraping
-startScraping();
+//startScraping();
