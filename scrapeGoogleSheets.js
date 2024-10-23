@@ -251,7 +251,7 @@ const scrapeData = async () => {
     });
   });
 
-  const firstObject = data[1]; // Get the first object
+  const firstObject = data[58]; // Get the first object
 
   // Save the data to a JSON file
   fs.writeFileSync('data.json', JSON.stringify(firstObject, null, 2), 'utf8');
@@ -286,7 +286,7 @@ const startScraping = () => {
       fetchLastData();  // Fetch the last data when the market is closed
       console.log('Market is closed. No further scraping will occur.');
     }
-  }, 10000); // Run every 10 seconds during market hours
+  }, 100000); // Run every 10 seconds during market hours
 };
 
 // Initial check when the script starts
