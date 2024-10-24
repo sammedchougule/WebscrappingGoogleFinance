@@ -210,7 +210,98 @@
 
 
 
-// RUNS IN THE MARKET HOURS IF NOT IT WILL FETCH LAST FETCHED DATA
+// // RUNS IN THE MARKET HOURS IF NOT IT WILL FETCH LAST FETCHED DATA
+
+// const puppeteer = require('puppeteer');
+// const fs = require('fs');
+
+// let lastFetchedData = null; // Variable to hold the last fetched data
+// let intervalId = null; // To store the interval ID
+
+// // Function to check if the current time is between 9:15 AM and 3:30 PM
+// const isMarketOpen = () => {
+//   const now = new Date();
+//   const start = new Date(now);
+//   const end = new Date(now);
+
+//   start.setHours(9, 15, 0);  // 9:15 AM
+//   end.setHours(15, 30, 0);   // 3:30 PM
+
+//   return now >= start && now <= end;
+// };
+
+// const scrapeData = async () => {
+//   const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvDTIRMVVztLtR70Sqf2MPKNNm6rXbPDqAVnyC6jSM9ZnVmAF9HXItfkSYq3G2Eg/pubhtml?gid=1132232009&single=true';
+  
+//   const browser = await puppeteer.launch({ headless: true });
+//   const page = await browser.newPage();
+//   await page.goto(url, { waitUntil: 'networkidle2' });
+
+//   const data = await page.evaluate(() => {
+//     const rows = Array.from(document.querySelectorAll('table tbody tr'));
+//     const headers = Array.from(rows[0].querySelectorAll('td')).map(header => header.innerText.trim());
+    
+//     return rows.slice(1).map(row => {
+//       const columns = Array.from(row.querySelectorAll('td'));
+//       return headers.reduce((obj, header, index) => {
+//         const value = columns[index] ? columns[index].innerText.trim() : null;
+//         if (value) obj[header] = value;  // Only add if value is not empty
+//         return obj;
+//       }, {});
+//     });
+//   });
+
+//   const firstObject = data[58]; // Get the first object
+
+//   // Save the data to a JSON file
+//   fs.writeFileSync('data.json', JSON.stringify(firstObject, null, 2), 'utf8');
+//   console.log('Data fetched and saved to data.json:', firstObject);
+
+//   lastFetchedData = firstObject; // Store the last fetched data
+
+//   await browser.close();
+// };
+
+// // Function to fetch the last data if the market is closed
+// const fetchLastData = () => {
+//   if (fs.existsSync('data.json')) {
+//     const data = fs.readFileSync('data.json', 'utf8');
+//     lastFetchedData = JSON.parse(data);
+//     console.log('Market is closed. Showing last fetched data:', lastFetchedData);
+//   } else {
+//     console.log('No data available. Please run the script during market hours.');
+//   }
+// };
+
+// // Function to handle scraping at regular intervals during market hours
+// const startScraping = () => {
+//   if (intervalId) clearInterval(intervalId); // Clear any existing intervals
+
+//   intervalId = setInterval(() => {
+//     if (isMarketOpen()) {
+//       console.log('Market is open. Fetching new data...');
+//       scrapeData();
+//     } else {
+//       clearInterval(intervalId); // Stop scraping when the market is closed
+//       fetchLastData();  // Fetch the last data when the market is closed
+//       console.log('Market is closed. No further scraping will occur.');
+//     }
+//   }, 100000); // Run every 10 seconds during market hours
+// };
+
+// // Initial check when the script starts
+// if (isMarketOpen()) {
+//   console.log('Market is open. Starting the scraping process.');
+//   startScraping();
+// } else {
+//   fetchLastData();  // Fetch the last data when the market is closed
+//   console.log('Market is closed. Data fetched only once.');
+// }
+
+
+
+
+// GETTING ALL THE NSE STOCKS (1663) AND GETTING THE DATA VIA WEBSCRAPING
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
@@ -231,7 +322,7 @@ const isMarketOpen = () => {
 };
 
 const scrapeData = async () => {
-  const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvDTIRMVVztLtR70Sqf2MPKNNm6rXbPDqAVnyC6jSM9ZnVmAF9HXItfkSYq3G2Eg/pubhtml?gid=1132232009&single=true';
+  const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvDTIRMVVztLtR70Sqf2MPKNNm6rXbPDqAVnyC6jSM9ZnVmAF9HXItfkSYq3G2Eg/pubhtml?gid=137035160&single=true';
   
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -251,11 +342,11 @@ const scrapeData = async () => {
     });
   });
 
-  const firstObject = data[58]; // Get the first object
+  const firstObject = data[489]; // Get the first object
 
   // Save the data to a JSON file
   fs.writeFileSync('data.json', JSON.stringify(firstObject, null, 2), 'utf8');
-  console.log('Data fetched and saved to data.json:', firstObject);
+  console.log(`Data fetched at ${new Date().toLocaleTimeString()} and saved to data.json: `, firstObject);
 
   lastFetchedData = firstObject; // Store the last fetched data
 
@@ -286,7 +377,7 @@ const startScraping = () => {
       fetchLastData();  // Fetch the last data when the market is closed
       console.log('Market is closed. No further scraping will occur.');
     }
-  }, 100000); // Run every 10 seconds during market hours
+  }, 50000); // Run every 10 seconds during market hours
 };
 
 // Initial check when the script starts
@@ -296,9 +387,4 @@ if (isMarketOpen()) {
 } else {
   fetchLastData();  // Fetch the last data when the market is closed
   console.log('Market is closed. Data fetched only once.');
-}
-
-
-
-
-
+};
