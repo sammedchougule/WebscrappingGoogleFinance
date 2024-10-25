@@ -342,7 +342,7 @@ const scrapeData = async () => {
     });
   });
 
-  const firstObject = data[489]; // Get the first object
+  const firstObject = data; // Get the first object
 
   // Save the data to a JSON file
   fs.writeFileSync('data.json', JSON.stringify(firstObject, null, 2), 'utf8');

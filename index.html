@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for negative and positive changes */
+        .negative {
+            color: red;
+        }
+        .positive {
+            color: green;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-start min-h-screen p-5">
+    <div class="container mx-auto bg-white rounded-lg shadow-lg p-5">
+        <h1 class="text-2xl font-semibold text-center mb-5">Stock Data</h1>
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead>
+                <tr class="bg-blue-600 text-white">
+                    <th class="p-3 border-b">Stock</th>
+                    <th class="p-3 border-b">Stock Name</th>
+                    <th class="p-3 border-b">Sector</th>
+                    <th class="p-3 border-b">Exchange</th>
+                    <th class="p-3 border-b">Price</th>
+                    <th class="p-3 border-b">Change (Rs)</th>
+                    <th class="p-3 border-b">Change (%)</th>
+                    <th class="p-3 border-b">Volume</th>
+                    <th class="p-3 border-b">Volume Spike</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody"></tbody>
+        </table>
+        <button id="loadMore" class="bg-blue-600 text-white rounded px-4 py-2 mt-4 mx-auto block" onclick="loadMore()">View More</button>
+    </div>
+
+    <script>
+        let stockData = [];
+        let currentIndex = 0;
+        const itemsPerPage = 50; // Show 50 stocks
+
+        async function fetchStockData() {
+            try {
+                const response = await fetch('./data.json'); // Ensure this path is correct
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                stockData = data.slice(0, 1663); // Assuming JSON is an array of objects with 1663 entries.
+                loadMore();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.body.innerHTML = `<div class="text-red-500 text-center">Failed to load data. Please check the console for errors.</div>`;
+            }
+        }
+
+        function loadMore() {
+            const dataBody = document.getElementById('dataBody');
+            const nextItems = stockData.slice(currentIndex, currentIndex + itemsPerPage);
+
+            // Check if there are more items to load
+            if (nextItems.length === 0) {
+                document.getElementById('loadMore').style.display = 'none'; // Hide button if no more data
+                return; // Exit function if no more items
+            }
+
+            nextItems.forEach(item => {
+                const row = document.createElement('tr');
+
+                // Only displaying the specified fields
+                const fieldsToShow = [
+                    { key: "stock", label: "Stock" },
+                    { key: "stock_name", label: "Stock Name" },
+                    { key: "sector", label: "Sector" },
+                    { key: "exchange", label: "Exchange" },
+                    { key: "price", label: "Price" },
+                    { key: "chg_rs", label: "Change (Rs)", isNumeric: true },
+                    { key: "chg_percentage", label: "Change (%)", isNumeric: true },
+                    { key: "volume", label: "Volume" },
+                    { key: "volume_spike", label: "Volume Spike" }
+                ];
+
+                fieldsToShow.forEach(field => {
+                    const cell = document.createElement('td');
+                    cell.textContent = item[field.key];
+                    cell.classList.add('p-3', 'border-b'); // Use classList.add() for multiple classes
+
+                    // Apply color based on numeric values
+                    if (field.isNumeric) {
+                        const value = parseFloat(item[field.key]);
+                        if (value < 0) {
+                            cell.classList.add('negative');
+                        } else if (value > 0) {
+                            cell.classList.add('positive');
+                        }
+                    }
+
+                    row.appendChild(cell);
+                });
+
+                dataBody.appendChild(row);
+            });
+
+            currentIndex += itemsPerPage;
+
+            // Hide button if all items are loaded
+            if (currentIndex >= stockData.length) {
+                document.getElementById('loadMore').style.display = 'none';
+            }
+        }
+
+        fetchStockData();
+    </script>
+</body>
+</html>
